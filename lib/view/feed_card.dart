@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/model/feed.dart';
 
-class Feedcard extends StatelessWidget {
-  const Feedcard({super.key});
+class Feedcard extends StatefulWidget {
+  final Feed feed;
+
+  const Feedcard({super.key, required this.feed});
+
+  @override
+  _FeedcardState createState() => _FeedcardState();
+}
+
+class _FeedcardState extends State<Feedcard> {
+  bool isLiked = false;
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    const profileImageUrl = 'https://www.pexels.com/photo/istanbul-istinye-18091667/';
-    const postImageUrl = 'https://images.pexels.com/photos/28795942/pexels-photo-28795942/free-photo-of-elegant-bridal-bouquet-with-pink-roses.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load';
-
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       child: Column(
@@ -15,14 +28,15 @@ class Feedcard extends StatelessWidget {
         children: [
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(profileImageUrl),
+              backgroundImage: NetworkImage(widget.feed.user.avatar),
             ),
-            title: Text('Jusfan', style: TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text('Estonia, Tallinn'),
+            title: Text(widget.feed.user.name,
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text(widget.feed.user.place),
             trailing: Icon(Icons.more_vert),
           ),
           Image.network(
-            postImageUrl,
+            widget.feed.content.image,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width * 0.8,
             fit: BoxFit.cover,
@@ -31,7 +45,13 @@ class Feedcard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Icon(Icons.favorite_border),
+                GestureDetector(
+                  onTap: toggleLike,
+                  child: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? Colors.red : Colors.black,
+                  ),
+                ),
                 SizedBox(width: 16),
                 Icon(Icons.chat_bubble_outline),
                 SizedBox(width: 16),
@@ -44,36 +64,31 @@ class Feedcard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Text(
-              '1,823 likes',
+              '${isLiked ? 1824 : 1823} likes', // Ubah jumlah like saat di-klik
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
             child: RichText(
               text: TextSpan(
                 style: TextStyle(color: Colors.black),
                 children: [
-                  TextSpan(text: 'AzucarMoreno ', style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(text: 'in Spain'),
+                  TextSpan(
+                      text: widget.feed.content.description,
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: ''),
                 ],
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
             child: Wrap(
               spacing: 8.0,
-              children: [
-                Chip(
-                  label: Text('Spain'),
-                  backgroundColor: Colors.orange.shade100,
-                ),
-                Chip(
-                  label: Text('azucarmoreno'),
-                  backgroundColor: Colors.orange.shade100,
-                ),
-              ],
+              children: [],
             ),
           ),
         ],
