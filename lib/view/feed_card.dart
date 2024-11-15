@@ -12,10 +12,19 @@ class Feedcard extends StatefulWidget {
 
 class _FeedcardState extends State<Feedcard> {
   bool isLiked = false;
+  bool isBookmarked = false; // Added to track the bookmark state
 
+  // Toggle the like button state
   void toggleLike() {
     setState(() {
       isLiked = !isLiked;
+    });
+  }
+
+  // Toggle the bookmark state
+  void toggleBookmark() {
+    setState(() {
+      isBookmarked = !isBookmarked;
     });
   }
 
@@ -57,14 +66,20 @@ class _FeedcardState extends State<Feedcard> {
                 SizedBox(width: 16),
                 Icon(Icons.send),
                 Spacer(),
-                Icon(Icons.bookmark_border),
+                GestureDetector(
+                  onTap: toggleBookmark, // Bookmark toggle function
+                  child: Icon(
+                    isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                    color: isBookmarked ? Colors.black : Colors.black,
+                  ),
+                ),
               ],
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Text(
-              '${isLiked ? 1824 : 1823} likes', // Ubah jumlah like saat di-klik
+              '${isLiked ? 1824 : 1823} likes', // Update the like count based on state
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
