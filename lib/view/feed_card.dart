@@ -3,8 +3,15 @@ import 'package:flutter_application_1/model/feed.dart';
 
 class Feedcard extends StatefulWidget {
   final Feed feed;
+  final bool isBookmarked; // Tambahkan ini untuk kontrol bookmark dari luar
+  final VoidCallback onBookmarkToggle;
 
-  const Feedcard({super.key, required this.feed});
+  const Feedcard({
+    super.key,
+    required this.feed,
+    required this.isBookmarked,
+    required this.onBookmarkToggle,
+  });
 
   @override
   _FeedcardState createState() => _FeedcardState();
@@ -12,19 +19,10 @@ class Feedcard extends StatefulWidget {
 
 class _FeedcardState extends State<Feedcard> {
   bool isLiked = false;
-  bool isBookmarked = false; // Added to track the bookmark state
 
-  // Toggle the like button state
   void toggleLike() {
     setState(() {
       isLiked = !isLiked;
-    });
-  }
-
-  // Toggle the bookmark state
-  void toggleBookmark() {
-    setState(() {
-      isBookmarked = !isBookmarked;
     });
   }
 
@@ -39,8 +37,10 @@ class _FeedcardState extends State<Feedcard> {
             leading: CircleAvatar(
               backgroundImage: NetworkImage(widget.feed.user.avatar),
             ),
-            title: Text(widget.feed.user.name,
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(
+              widget.feed.user.name,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             subtitle: Text(widget.feed.user.place),
             trailing: Icon(Icons.more_vert),
           ),
@@ -67,10 +67,12 @@ class _FeedcardState extends State<Feedcard> {
                 Icon(Icons.send),
                 Spacer(),
                 GestureDetector(
-                  onTap: toggleBookmark, // Bookmark toggle function
+                  onTap: widget.onBookmarkToggle, // Panggil callback
                   child: Icon(
-                    isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                    color: isBookmarked ? Colors.black : Colors.black,
+                    widget.isBookmarked
+                        ? Icons.bookmark
+                        : Icons.bookmark_border,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -79,7 +81,7 @@ class _FeedcardState extends State<Feedcard> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Text(
-              '${isLiked ? 1824 : 1823} likes', // Update the like count based on state
+              '${isLiked ? 1824 : 1823} likes',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -91,19 +93,11 @@ class _FeedcardState extends State<Feedcard> {
                 style: TextStyle(color: Colors.black),
                 children: [
                   TextSpan(
-                      text: widget.feed.content.description,
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(text: ''),
+                    text: widget.feed.content.description,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-            child: Wrap(
-              spacing: 8.0,
-              children: [],
             ),
           ),
         ],
