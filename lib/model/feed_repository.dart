@@ -4,38 +4,47 @@ class FeedRepository {
   List<Feed> fetch() {
     return [
       Feed(
+          id: 1,
           user: User(
-              name: 'En',
-              avatar:
-                  'https://images.pexels.com/photos/29083766/pexels-photo-29083766/free-photo-of-colorful-dia-de-muertos-celebration-in-mexico.jpeg?auto=compress&cs=tinysrgb&w=600',
-              place: 'Garut'),
+            name: 'EN',
+            avatar:
+                'https://images.pexels.com/photos/30359820/pexels-photo-30359820/free-photo-of-intricate-moorish-archways-in-alhambra-palace-spain.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+            place: 'Arab,Jazirah',
+          ),
           content: Content(
               image:
-                  'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600',
-              likes: '2112 likes',
-              description: 'The pwetty')),
+                  'https://images.pexels.com/photos/8565618/pexels-photo-8565618.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load',
+              isLike: false,
+              bookmark: false,
+              likes: '21.310 likes',
+              descriptions: 'cute girl')),
       Feed(
+          id: 2,
           user: User(
-              name: 'mikael',
-              avatar:
-                  'https://images.pexels.com/photos/16867014/pexels-photo-16867014/free-photo-of-women-dancing-with-baskets-of-flowers.jpeg?auto=compress&cs=tinysrgb&w=600',
-              place: 'Bandung'),
+            name: 'Ultrathin',
+            avatar: '',
+            place: 'Bandung, Indonesia',
+          ),
           content: Content(
-              image:
-                  'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=600',
-              likes: '666 likes',
-              description: 'Timnas U19')),
+              image: '',
+              isLike: false,
+              bookmark: false,
+              likes: '30.100 likes',
+              descriptions: 'love love couple')),
       Feed(
+          id: 3,
           user: User(
-              name: 'Carry',
-              avatar:
-                  'https://images.pexels.com/photos/3311574/pexels-photo-3311574.jpeg?auto=compress&cs=tinysrgb&w=600',
-              place: 'Garut'),
+            name: 'dogddag',
+            avatar: '',
+            place: 'Garut, Indonesia',
+          ),
           content: Content(
               image:
-                  'https://images.pexels.com/photos/248747/pexels-photo-248747.jpeg?auto=compress&cs=tinysrgb&w=600',
-              likes: '666 likes',
-              description: 'no limitzs')),
+                  'https://images.pexels.com/photos/18297044/pexels-photo-18297044/free-photo-of-labrador-retriever-puppy.jpeg?auto=compress&cs=tinysrgb&w=600',
+              isLike: false,
+              bookmark: false,
+              likes: '19.837 likes',
+              descriptions: 'day 123243523')),
     ];
   }
 }

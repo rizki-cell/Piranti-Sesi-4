@@ -1,107 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/controller/feed_controller.dart';
 import 'package:flutter_application_1/model/feed.dart';
+import 'package:provider/provider.dart';
 
-class Feedcard extends StatefulWidget {
+class FeedCard extends StatefulWidget {
   final Feed feed;
-  final bool isBookmarked; // Tambahkan ini untuk kontrol bookmark dari luar
-  final VoidCallback onBookmarkToggle;
 
-  const Feedcard({
-    super.key,
-    required this.feed,
-    required this.isBookmarked,
-    required this.onBookmarkToggle,
-  });
+  const FeedCard({super.key, required this.feed});
 
   @override
-  _FeedcardState createState() => _FeedcardState();
+  State<FeedCard> createState() => _FeedCardState();
 }
 
-class _FeedcardState extends State<Feedcard> {
-  bool isLiked = false;
-
-  void toggleLike() {
-    setState(() {
-      isLiked = !isLiked;
-    });
-  }
-
+class _FeedCardState extends State<FeedCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(widget.feed.user.avatar),
-            ),
-            title: Text(
-              widget.feed.user.name,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(widget.feed.user.place),
-            trailing: Icon(Icons.more_vert),
+      child: Column(children: [
+        ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(widget.feed.user.avatar),
           ),
-          Image.network(
-            widget.feed.content.image,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width * 0.8,
-            fit: BoxFit.cover,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: toggleLike,
-                  child: Icon(
-                    isLiked ? Icons.favorite : Icons.favorite_border,
-                    color: isLiked ? Colors.red : Colors.black,
-                  ),
-                ),
-                SizedBox(width: 16),
-                Icon(Icons.chat_bubble_outline),
-                SizedBox(width: 16),
-                Icon(Icons.send),
-                Spacer(),
-                GestureDetector(
-                  onTap: widget.onBookmarkToggle, // Panggil callback
-                  child: Icon(
-                    widget.isBookmarked
+          title: Text(widget.feed.user.name),
+          subtitle: Text(widget.feed.user.place),
+          trailing: const Icon(Icons.more_vert_rounded),
+        ),
+        Image.network(
+          widget.feed.content.image,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.width * 0.8,
+          fit: BoxFit.cover,
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            const SizedBox(width: 10),
+            IconButton(
+                onPressed: () {
+                  context.read<FeedController>().like(widget.feed);
+                },
+                icon: Icon(
+                  widget.feed.content.isLike
+                      ? Icons.favorite
+                      : Icons.favorite_outline_rounded,
+                  color: widget.feed.content.isLike
+                      ? Colors.red
+                      : null, // Tidak ada warna jika false
+                  size: 24.0,
+                )),
+            const SizedBox(width: 10),
+            const Icon(
+              Icons.mode_comment_outlined,
+              size: 24.0,
+            ),
+            const SizedBox(width: 10),
+            const Icon(
+              Icons.send_outlined,
+              size: 24.0,
+            ),
+            const Spacer(
+              flex: 1,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: IconButton(
+                  onPressed: () {
+                    context.read<FeedController>().bookmark(widget.feed);
+                  },
+                  icon: Icon(
+                    widget.feed.content.bookmark
                         ? Icons.bookmark
-                        : Icons.bookmark_border,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Text(
-              '${isLiked ? 1824 : 1823} likes',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-            child: RichText(
-              text: TextSpan(
-                style: TextStyle(color: Colors.black),
-                children: [
-                  TextSpan(
-                    text: widget.feed.content.description,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+                        : Icons.bookmark_outline_rounded,
+                    color: widget.feed.content.bookmark
+                        ? const Color.fromARGB(255, 0, 0, 0)
+                        : null, // Tidak ada warna jika false
+                    size: 24.0,
+                  )),
+              // Icon(Icons.bookmark_outline_rounded),
+            )
+          ],
+        ),
+        ListTile(
+          title: Text(widget.feed.content.likes),
+          subtitle: Text(widget.feed.content.descriptions),
+        )
+      ]),
     );
   }
 }

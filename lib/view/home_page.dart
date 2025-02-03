@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/controller/feed_controller.dart';
-import 'package:flutter_application_1/model/feed.dart';
-import 'package:flutter_application_1/view/feed_card.dart';
-import 'package:flutter_application_1/view/bookmark_page.dart'; // Import BookmarkPage
+import 'package:flutter_application_1/controller/home_controller.dart';
+import 'package:flutter_application_1/view/feed_bookmark.dart';
+import 'package:flutter_application_1/view/feed_list_widget.dart';
+import 'package:flutter_application_1/view/profile_page.dart'; // Import ProfilePage
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,52 +13,61 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final FeedController feedController = FeedController();
-  final List<Feed> bookmarkedFeeds = [];
-
-  void toggleBookmark(Feed feed) {
-    setState(() {
-      if (bookmarkedFeeds.contains(feed)) {
-        bookmarkedFeeds.remove(feed);
-      } else {
-        bookmarkedFeeds.add(feed);
-      }
-    });
-  }
+  final bodies = const [
+    FeedListWidget(),
+    FeedListWidget(),
+    ProfilePage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<HomeController>();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Flutter Demo',
+        title: const Text(
+          'OurApp',
           style: TextStyle(fontWeight: FontWeight.w500),
         ),
+        leading: const Icon(Icons.menu_rounded),
         actions: [
           IconButton(
-            icon: Icon(Icons.bookmark),
             onPressed: () {
-              // Navigate to BookmarkPage
-              Navigator.push(
-                context,
+              Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (context) => BookmarkPage(
-                          bookmarkedFeeds: bookmarkedFeeds,
-                        )),
+                  builder: (context) => const BookmarkPage(),
+                ),
               );
             },
+            icon: const Icon(Icons.notifications_none_outlined),
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: feedController.feeds.length,
-        itemBuilder: (context, index) {
-          final feed = feedController.feeds[index];
-          return Feedcard(
-            feed: feed,
-            isBookmarked: bookmarkedFeeds.contains(feed),
-            onBookmarkToggle: () => toggleBookmark(feed), // Kirim callback
-          );
+      body: bodies[controller.selectedIndex], // Render sesuai tab
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.bookmark),
+            icon: Icon(Icons.bookmark_outline),
+            label: 'Bookmark',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: controller.selectedIndex,
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.black,
+        onTap: (index) {
+          controller.changeIndex(index);
         },
       ),
     );
